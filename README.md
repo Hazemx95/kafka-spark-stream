@@ -52,7 +52,7 @@ python3 validate_pipeline.py
 
 ##  Pipeline Configuration
 
-### 🔌 **Kafka Configuration (Production)**
+###  **Kafka Configuration (Production)**
 - **Bootstrap Servers**: `strimzi-kafka-cluster-oci-preprod-kafka-bootstrap.strimzi-kafka-preprod:9092`
 - **Topics**: 
   - FCDR Jasmin: 5 production topics

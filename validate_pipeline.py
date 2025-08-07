@@ -19,18 +19,18 @@ class PipelineValidator:
         
     def log_error(self, message):
         self.errors.append(message)
-        print(f"❌ ERROR: {message}")
+        print(f"ERROR: {message}")
         
     def log_warning(self, message):
         self.warnings.append(message)
-        print(f"⚠️  WARNING: {message}")
+        print(f"WARNING: {message}")
         
     def log_success(self, message):
-        print(f"✅ {message}")
-        
+        print(f"SUCCESS: {message}")
+
     def check_directories(self):
         """Check if required directories exist"""
-        print("\n📁 Checking directories...")
+        print("\n Checking directories...")
         
         required_dirs = [
             "/home/homar/spark-kafka-stream/data_lake",
@@ -46,7 +46,7 @@ class PipelineValidator:
                 
     def check_docker_containers(self):
         """Check if Docker containers are running"""
-        print("\n🐳 Checking Docker containers...")
+        print("\n Checking Docker containers...")
         
         required_containers = [
             "spark-master",
@@ -71,7 +71,7 @@ class PipelineValidator:
             
     def check_network_connectivity(self):
         """Check network connectivity between containers"""
-        print("\n🌐 Checking network connectivity...")
+        print("\n Checking network connectivity...")
         
         # Test Spark to Vertica connectivity
         try:
@@ -89,8 +89,8 @@ class PipelineValidator:
             
     def check_ports(self):
         """Check if required ports are accessible"""
-        print("\n🔌 Checking port accessibility...")
-        
+        print("\n Checking port accessibility...")
+    
         ports_to_check = [
             (8888, "Jupyter"),
             (8978, "DBeaver"), 
@@ -116,7 +116,7 @@ class PipelineValidator:
                 
     def check_vertica_status(self):
         """Check Vertica database status"""
-        print("\n🗄️  Checking Vertica database...")
+        print("\n  Checking Vertica database...")
         
         try:
             result = subprocess.run([
@@ -134,7 +134,7 @@ class PipelineValidator:
             
     def check_kafka_connectivity(self):
         """Check Kafka connectivity (basic test)"""
-        print("\n📡 Checking Kafka connectivity...")
+        print("\n Checking Kafka connectivity...")
         
         # This is a basic check - actual Kafka connectivity requires VPN
         kafka_server = "strimzi-kafka-cluster-oci-preprod-kafka-bootstrap.strimzi-kafka-preprod:9092"
@@ -149,7 +149,7 @@ class PipelineValidator:
             
     def check_notebook_files(self):
         """Check if notebook files exist"""
-        print("\n📋 Checking notebook files...")
+        print("\n Checking notebook files...")
         
         notebook_path = "/home/homar/spark-kafka-stream/scripts/realtime_sms_pipeline.ipynb"
         
@@ -161,7 +161,7 @@ class PipelineValidator:
     def generate_report(self):
         """Generate validation report"""
         print("\n" + "="*60)
-        print("📊 VALIDATION REPORT")
+        print(" VALIDATION REPORT")
         print("="*60)
         
         if not self.errors and not self.warnings:
@@ -169,17 +169,17 @@ class PipelineValidator:
             print("🚀 Your pipeline is ready for testing!")
             
         if self.warnings:
-            print(f"\n⚠️  WARNINGS ({len(self.warnings)}):")
+            print(f"\n  WARNINGS ({len(self.warnings)}):")
             for warning in self.warnings:
                 print(f"   • {warning}")
                 
         if self.errors:
-            print(f"\n❌ ERRORS ({len(self.errors)}):")
+            print(f"\n ERRORS ({len(self.errors)}):")
             for error in self.errors:
                 print(f"   • {error}")
-            print("\n🔧 Please fix the errors before running the pipeline")
+            print("\n Please fix the errors before running the pipeline")
             
-        print("\n📋 Next Steps:")
+        print("\n Next Steps:")
         if not self.errors:
             print("1. Ensure VPN connection to Unifonic Kafka")
             print("2. Open Jupyter: http://localhost:8888")
@@ -193,9 +193,9 @@ class PipelineValidator:
         return len(self.errors) == 0
 
 def main():
-    print("🔍 Real-Time SMS Pipeline Validation")
+    print(" Real-Time SMS Pipeline Validation")
     print("====================================")
-    print(f"⏰ Timestamp: {datetime.now()}")
+    print(f" Timestamp: {datetime.now()}")
     
     validator = PipelineValidator()
     
