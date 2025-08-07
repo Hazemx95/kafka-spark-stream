@@ -1,0 +1,94 @@
+# version: '4'
+services:
+  pg-db:
+    image: postgres
+    container_name: pg-db
+    hostname: pg_db
+    environment:
+      POSTGRES_PASSWORD: "P@ssw0rd" 
+    ports:
+      - 5445:5432
+    restart: always
+    networks:
+      - mynet
+    volumes:
+      - /home/homar/spark-kafka-stream/scripts:/usr/myvol
+
+  ci-vertica-db:
+    image: vertica/vertica-ce
+    container_name: ci-vertica-db
+    restart: always
+    environment:
+      VERTICA_DB_NAME: customer_insights
+      VERTICA_DB_GROUP: verticadba
+      VERTICA_DB_UID: 1000
+      VERTICA_DB_USER: customer_insights
+      APP_DB_USER: customer_insights
+      APP_DB_PASSWORD: customer_insights1
+      vertica_db_password: customer_insights1
+      TZ: "UTC"
+    ports:
+      - 15433:5433
+      - 5444:5444
+    volumes:
+      - /home/homar/spark-kafka-stream/scripts:/usr/myvol
+      - vertica_data:/opt/vertica/data
+    networks:
+      - mynet
+    healthcheck:
+      test: ["CMD", "/opt/vertica/bin/vsql", "-U", "customer_insights", "-d", "customer_insights", "-c", "SELECT 1;"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  jupyter:
+    image: drhazem95/spark-kafka-stream
+    container_name: spark-master
+    hostname: pyspark_etl
+    environment:
+     - SPARK_MODE=master
+     - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - "8888:8888"
+      - "7077:7077"
+      - "4040:4040"  # Spark UI
+    restart: always
+    networks:
+      - mynet
+    volumes:
+    - /home/homar/spark-kafka-stream/scripts:/home/jovyan/code
+    - /home/homar/spark-kafka-stream/data_lake:/home/jovyan/code/data_lake
+    - /home/homar/spark-kafka-stream/checkpoints:/home/jovyan/code/checkpoints
+    working_dir: /home/jovyan/code
+    depends_on:
+      - ci-vertica-db
+
+  dbeaver:
+    image: dbeaver/cloudbeaver:latest
+    container_name: dbeaver-client
+    hostname: dbeaver
+    environment:
+      - CB_SERVER_NAME=DBeaver CloudBeaver Server
+      - CB_SERVER_URL=http://localhost:8978
+      - CB_ADMIN_NAME=admin
+      - CB_ADMIN_PASSWORD=admin123
+    ports:
+      - "8978:8978"
+    restart: always
+    networks:
+      - mynet
+    volumes:
+      - dbeaver_data:/opt/cloudbeaver/workspace
+    depends_on:
+      - ci-vertica-db
+      - pg-db
+
+volumes:
+  dbeaver_data:
+    driver: local
+  vertica_data:
+    driver: local
+
+networks:
+  mynet:
+    external: true

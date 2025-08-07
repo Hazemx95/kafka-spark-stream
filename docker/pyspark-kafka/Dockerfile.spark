@@ -1,0 +1,12 @@
+FROM drhazem95/pyspark_db_python:v1.4
+USER root
+RUN apt update && apt upgrade -y 
+RUN apt-get update && apt-get install -y libpq-dev gcc
+RUN apt install openssh-server curl wget -y
+RUN apt install python3-pip 
+RUN pip --version 
+RUN pip install --no-cache-dir jaydebeapi
+WORKDIR /usr/local/spark/jars
+COPY vertica-jdbc.jar /usr/local/spark/jars/
+USER jovyan 
+
