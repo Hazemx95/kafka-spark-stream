@@ -52,8 +52,13 @@ python3 validate_pipeline.py
 
 ##  Pipeline Configuration
 
+<<<<<<< HEAD
 ###  **Kafka Configuration (Production)**
 - **Bootstrap Servers**: `strimzi-kafka-cluster-oci-preprod-kafka-bootstrap.strimzi-kafka-preprod:9092`
+=======
+### 🔌 **Kafka Configuration (Production)**
+- **Bootstrap Servers**: ***************************************************
+>>>>>>> origin/main
 - **Topics**: 
   - FCDR Jasmin: 5 production topics
   - FCDR Telestax: 1 production topic  
