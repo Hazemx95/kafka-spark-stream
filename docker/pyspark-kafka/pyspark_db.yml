@@ -5,14 +5,21 @@ services:
     container_name: pg-db
     hostname: pg_db
     environment:
-      POSTGRES_PASSWORD: "P@ssw0rd" 
+      POSTGRES_PASSWORD: "P@ssw0rd"
+      POSTGRES_HOST_AUTH_METHOD: "md5"
+      POSTGRES_INITDB_ARGS: "--auth-host=md5"
     ports:
-      - 5445:5432
+      - "0.0.0.0:5445:5432"  # Explicitly bind to all interfaces for external access
     restart: always
     networks:
       - mynet
     volumes:
       - /home/homar/spark-kafka-stream/scripts:/usr/myvol
+    command: >
+      postgres -c listen_addresses='*' 
+      -c port=5432 
+      -c max_connections=200
+      -c shared_buffers=256MB
 
   ci-vertica-db:
     image: vertica/vertica-ce
@@ -26,10 +33,12 @@ services:
       APP_DB_USER: customer_insights
       APP_DB_PASSWORD: customer_insights1
       vertica_db_password: customer_insights1
+      VERTICA_MEMDEBUG: "2"
+      VERTICA_OPT_MEMORY_USAGE: "95%"
       TZ: "UTC"
     ports:
-      - 15433:5433
-      - 5444:5444
+      - "0.0.0.0:15433:5433"  # Bind to all interfaces for external access
+      - "0.0.0.0:5444:5444"   # Management Console port
     volumes:
       - /home/homar/spark-kafka-stream/scripts:/usr/myvol
       - vertica_data:/opt/vertica/data
@@ -69,9 +78,10 @@ services:
     hostname: dbeaver
     environment:
       - CB_SERVER_NAME=DBeaver CloudBeaver Server
-      - CB_SERVER_URL=http://localhost:8978
+      - CB_SERVER_URL=http://0.0.0.0:8978
       - CB_ADMIN_NAME=admin
       - CB_ADMIN_PASSWORD=admin123
+      - CB_LOCAL_HOST_ADDRESS=0.0.0.0
     ports:
       - "8978:8978"
     restart: always

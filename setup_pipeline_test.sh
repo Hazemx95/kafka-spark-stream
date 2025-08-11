@@ -28,11 +28,6 @@ else
     echo " Network 'mynet' already exists"
 fi
 
-# Copy notebook to scripts directory
-echo " Copying pipeline notebook..."
-cp /home/homar/spark-kafka-stream/script/realtime_sms_pipeline.ipynb /home/homar/spark-kafka-stream/scripts/
-echo " Notebook copied to scripts directory"
-
 # Build custom Spark image if needed
 echo " Building custom Spark image..."
 cd /home/homar/spark-kafka-stream/docker/pyspark-kafka
@@ -100,6 +95,7 @@ echo ""
 
 # Show running containers
 echo " Running containers:"
+#semilar to docker container ls or ps 
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 
 echo ""
